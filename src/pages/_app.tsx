@@ -1,7 +1,9 @@
-import '../styles/globals.css'
+import { AppProps } from "next/app";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import "../styles/global.scss";
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
 }
 
-export default MyApp
+export default MyApp;
