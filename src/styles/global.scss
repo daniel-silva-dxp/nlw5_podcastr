@@ -83,3 +83,17 @@ a {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 7px !important;
+}
+::-webkit-scrollbar-track {
+  background: var(--gray-100) !important;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--green-500) !important;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green-500) !important;
+}
