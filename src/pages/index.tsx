@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { GetStaticProps } from "next";
+import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 
@@ -6,13 +8,48 @@ import { api } from "../services/api";
 import { Episode } from "../types/types";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
 
+import styles from "../styles/pages/home.module.scss";
+
 type HomeProps = {
-  episodes: Episode[];
+  latesEpisodes: Episode[];
+  allEpisodes: Episode[];
 };
 
-export default function Home({ episodes }: HomeProps) {
-  console.log(episodes);
-  return <h1>Index</h1>;
+export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
+  console.log(latesEpisodes);
+  return (
+    <div className={styles.homepage}>
+      <section className={styles.latesEpisodes}>
+        <h2>Últimos lançamentos</h2>
+
+        <ul>
+          {latesEpisodes.map((episode) => (
+            <li key={episode.id}>
+              <Image
+                width={192}
+                height={192}
+                src={episode.thumbnail}
+                alt={episode.title}
+                objectFit="cover"
+              />
+
+              <div className={styles.episodeDetails}>
+                <a href="">{episode.title}</a>
+                <p>{episode.members}</p>
+                <span>{episode.published_at}</span>
+                <span>{episode.file.durationAsString}</span>
+              </div>
+
+              <button type="button">
+                <img src="/play-green.svg" alt="Tocar episódio" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section className={styles.allEpisodes}></section>
+    </div>
+  );
 }
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -44,9 +81,13 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   });
 
+  const latesEpisodes = episodes.slice(0, 2);
+  const allEpisodes = episodes.slice(2, episodes.length);
+
   return {
     props: {
-      episodes,
+      latesEpisodes,
+      allEpisodes,
     },
     revalidate: 60 * 60 * 8, // 8 hours
   };
