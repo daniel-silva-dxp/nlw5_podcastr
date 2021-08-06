@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { GetStaticPaths, GetStaticProps } from "next";
+import Image from "next/image";
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 
@@ -6,14 +8,48 @@ import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 import { Episode as EpisodeType } from "../../types/types";
 
+import styles from "../../styles/pages/episode.module.scss";
+import Link from "next/link";
+
 type EpisodeProps = {
   episode: EpisodeType;
 };
 
 export default function Episode({ episode }: EpisodeProps) {
   return (
-    <div>
-      <h1>Episode</h1>
+    <div className={styles.container}>
+      <div className={styles.episode}>
+        <div className={styles.thumbnailContent}>
+          <Link href="/" passHref>
+            <button>
+              <img src="/arrow-left.svg" alt="Voltar" />
+            </button>
+          </Link>
+          <Image
+            width={700}
+            height={160}
+            src={episode.thumbnail}
+            alt={episode.title}
+            title={episode.title}
+            objectFit="cover"
+          />
+          <button>
+            <img src="/play.svg" alt="Tocar episódio" />
+          </button>
+        </div>
+
+        <header>
+          <h1>{episode.title}</h1>
+          <span>{episode.members}</span>
+          <span>{episode.published_at}</span>
+          <span>{episode.file.durationAsString}</span>
+        </header>
+
+        <div
+          className={styles.description}
+          dangerouslySetInnerHTML={{ __html: episode.description }}
+        />
+      </div>
     </div>
   );
 }
