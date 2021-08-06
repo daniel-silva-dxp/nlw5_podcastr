@@ -17,7 +17,6 @@ type HomeProps = {
 };
 
 export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
-  console.log(latesEpisodes);
   return (
     <div className={styles.homepage}>
       <section className={styles.latesEpisodes}>
