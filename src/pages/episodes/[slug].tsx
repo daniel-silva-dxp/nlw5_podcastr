@@ -10,18 +10,21 @@ import { Episode as EpisodeType } from "../../types/types";
 
 import styles from "../../styles/pages/episode.module.scss";
 import Link from "next/link";
+import { usePlayContext } from "../../hooks/usePlayContext";
 
 type EpisodeProps = {
   episode: EpisodeType;
 };
 
 export default function Episode({ episode }: EpisodeProps) {
+  const { play } = usePlayContext();
+
   return (
     <div className={styles.container}>
       <div className={styles.episode}>
         <div className={styles.thumbnailContent}>
           <Link href="/" passHref>
-            <button>
+            <button type="button">
               <img src="/arrow-left.svg" alt="Voltar" />
             </button>
           </Link>
@@ -33,7 +36,7 @@ export default function Episode({ episode }: EpisodeProps) {
             title={episode.title}
             objectFit="cover"
           />
-          <button>
+          <button type="button" onClick={() => play(episode)}>
             <img src="/play.svg" alt="Tocar episódio" />
           </button>
         </div>

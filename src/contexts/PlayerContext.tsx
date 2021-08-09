@@ -18,12 +18,17 @@ type PlayerContextData = {
   episodeList: Episode[];
   currentEpisodeIndex: number;
   isPlaying: boolean;
+  hasNext: boolean;
+  hasPrevious: boolean;
   play: (episode: Episode) => void;
+  playList: (list: Episode[], index: number) => void;
   togglePay: () => void;
   setPlayingState: (state: boolean) => void;
+  playNext: () => void;
+  playPrevious: () => void;
 };
 
-type PlayerContextProps = {
+type PlayerContextProviderProps = {
   children: ReactNode;
 };
 
@@ -31,7 +36,7 @@ export const PlayerContext = createContext({} as PlayerContextData);
 
 export default function PlayerContextProvider({
   children,
-}: PlayerContextProps) {
+}: PlayerContextProviderProps) {
   const [episodeList, setEpisodeList] = useState([]);
   const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -39,6 +44,12 @@ export default function PlayerContextProvider({
   function play(episode: Episode) {
     setEpisodeList([episode]);
     setCurrentEpisodeIndex(0);
+    setIsPlaying(true);
+  }
+
+  function playList(list: Episode[], index: number) {
+    setEpisodeList(list);
+    setCurrentEpisodeIndex(index);
     setIsPlaying(true);
   }
 
@@ -50,15 +61,37 @@ export default function PlayerContextProvider({
     setIsPlaying(state);
   }
 
+  const hasPrevious = currentEpisodeIndex > 0;
+  const hasNext = currentEpisodeIndex + 1 < episodeList.length;
+
+  function playNext() {
+    const nextEpisodeIndex = currentEpisodeIndex + 1;
+
+    if (hasNext) {
+      setCurrentEpisodeIndex(currentEpisodeIndex + 1);
+    }
+  }
+
+  function playPrevious() {
+    if (hasPrevious) {
+      setCurrentEpisodeIndex(currentEpisodeIndex - 1);
+    }
+  }
+
   return (
     <PlayerContext.Provider
       value={{
         episodeList,
         currentEpisodeIndex,
         isPlaying,
+        hasNext,
+        hasPrevious,
         play,
+        playList,
         togglePay,
         setPlayingState,
+        playNext,
+        playPrevious,
       }}
     >
       {children}
