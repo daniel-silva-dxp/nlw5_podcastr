@@ -1,9 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+import { useContext } from "react";
 import { GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
+
+import { PlayerContext } from "../contexts/PlayerContext";
 
 import { api } from "../services/api";
 import { Episode } from "../types/types";
@@ -17,6 +20,8 @@ type HomeProps = {
 };
 
 export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latesEpisodes}>
@@ -42,7 +47,7 @@ export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
                 <span>{episode.file.durationAsString}</span>
               </div>
 
-              <button type="button">
+              <button type="button" onClick={() => play(episode)}>
                 <img src="/play-green.svg" alt="Tocar episódio" />
               </button>
             </li>
