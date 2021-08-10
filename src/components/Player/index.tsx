@@ -8,10 +8,12 @@ import { usePlayContext } from "../../hooks/usePlayContext";
 import "rc-slider/assets/index.css";
 import styles from "./styles.module.scss";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
+import { storage } from "../../utils/storage";
 
 export function Player() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [progress, setProgress] = useState(0);
+  const [episode, setEpisode] = useState(null);
 
   const {
     episodeList,
@@ -29,7 +31,12 @@ export function Player() {
     playPrevious,
   } = usePlayContext();
 
-  const episode = episodeList[currentEpisodeIndex];
+  useEffect(() => {
+    const data = storage.get("episodes");
+    if (data) {
+      setEpisode(data[currentEpisodeIndex] || episodeList[currentEpisodeIndex]);
+    }
+  }, [episodeList, currentEpisodeIndex]);
 
   useEffect(() => {
     if (!audioRef.current) {

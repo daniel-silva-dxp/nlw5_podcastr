@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useState } from "react";
+import { storage } from "../utils/storage";
 
 type Episode = {
   id: string;
@@ -51,12 +52,16 @@ export default function PlayerContextProvider({
     setEpisodeList([episode]);
     setCurrentEpisodeIndex(0);
     setIsPlaying(true);
+
+    storage.set("episode", episode);
   }
 
   function playList(list: Episode[], index: number) {
     setEpisodeList(list);
     setCurrentEpisodeIndex(index);
     setIsPlaying(true);
+
+    storage.set("episodes", list);
   }
 
   function togglePay() {
